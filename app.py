@@ -54,7 +54,7 @@ def request(troll_name):
     troll = [troll.serialize_troll() for troll in troll_query]
     comments_query = Comments.query.filter_by(troll_name=troll_name).all()
     comments = [comment.serialize_comments() for comment in comments_query]
-    return jsonify([troll, comments])
+    return jsonify(troll, comments)
     # user = Troll.query.filter_by(troll_name=troll_name).first()
 
 
