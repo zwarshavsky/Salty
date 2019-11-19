@@ -14,6 +14,7 @@ pandas = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 gunicorn = "*"
+flask-json = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,5 +1,6 @@
 """Salty Hacker / JSON Output """
 from flask import Flask, jsonify
+from flask_json import FlaskJSON, json_response
 from models import DB, Troll, Comments
 import requests
 import json
@@ -10,6 +11,7 @@ APP = Flask(__name__)
 APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hackernews.sqlite3'
 APP.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
+FlaskJSON(APP)
 DB.init_app(APP)
 
 @APP.route('/')
@@ -48,13 +50,26 @@ def newpull(item):
     return "Success"
 
 
-@APP.route('/request/<troll_name>', methods=['GET'])
-def request(troll_name):
-    troll_query = [Troll.query.filter_by(troll_name=troll_name).first()]
-    troll = [troll.serialize_troll() for troll in troll_query]
-    comments_query = Comments.query.filter_by(troll_name=troll_name).all()
+# @APP.route('/request/<troll_name>', methods=['GET'])
+# def request(troll_name):
+#     troll_query = [Troll.query.filter_by(troll_name=troll_name).first()]
+#     troll = [troll.serialize_troll() for troll in troll_query]
+#     comments_query = Comments.query.filter_by(troll_name=troll_name).all()
+#     comments = [comment.serialize_comments() for comment in comments_query]
+#     return json_response(troll=troll, comments=comments)
+#     # user = Troll.query.filter_by(troll_name=troll_name).first()
+
+
+
+@APP.route('/api/trolls', methods=['GET'])
+def trolls():
+    trolls_query = Troll.query.all()
+    troll = [troll.serialize_troll() for troll in trolls_query]
+    return jsonify(troll)
+
+
+@APP.route('/api/comments', methods=['GET'])
+def comments():
+    comments_query = Comments.query.all()
     comments = [comment.serialize_comments() for comment in comments_query]
-    return jsonify(troll, comments)
-    # user = Troll.query.filter_by(troll_name=troll_name).first()
-
-
+    return jsonify(comments)
