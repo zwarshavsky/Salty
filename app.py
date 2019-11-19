@@ -1,38 +1,23 @@
-"""OpenAQ Air Quality Dashboard with Flask."""
-from flask import Flask
-from hackernews import HackerNews
-import nest_asyncio
-
+"""Salty Hacker / JSON Output """
+from flask import Flask, jsonify
+from models import DB, troll, comments
 
 
 APP = Flask(__name__)
-API = HackerNews()
+APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hackernews.sqlite3'
+APP.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
+
+DB.init_app(APP)
 
 @APP.route('/')
 def root():
     """Base view."""
-    # user = API.get_user('ryanspahn')
-    # return API.get_items_by_ids([70149, 37236, 2345], item_type='story')
-    # for comment in user.comments:
-    #     return comment.kids
-    return "Hello8475843758586758967587685!"
+    return "YES"
 
+@APP.route('/refresh')
+def refresh():
+    """Pull fresh data from Open AQ and replace existing data."""
+    DB.drop_all()
+    DB.create_all()
+    return "Updated!"
 
-# query the database for any Record objects that have value greater 
-# or equal to 10. The filter method of SQLALchemy queries will be 
-# invaluable for this. Hint - your query should look like 
-# Record.query.filter(condition).all(), where condition is a 
-# comparison/statement that returns a boolean (true/false), and you 
-# can access the fields of Record to make that comparison.
-
-
-
-# def get_record():
-#     status, body = API.measurements(city='Los Angeles', parameter='pm25')
-#     results = []
-#     for result in body["results"]:
-#         results.append((result["date"]["utc"], result["value"]))
-#     return results
-
-if __name__ == '__main__':
-    app.run(debug=True)
