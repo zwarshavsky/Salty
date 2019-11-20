@@ -63,6 +63,7 @@ def newpull(item):
 
 @APP.route('/api/trolls', methods=['GET'])
 def trolls():
+    """pull all entries from trolls table"""
     trolls_query = Troll.query.all()
     troll = [troll.serialize_troll() for troll in trolls_query]
     return jsonify(troll)
@@ -70,6 +71,10 @@ def trolls():
 
 @APP.route('/api/comments', methods=['GET'])
 def comments():
+    """pull all entries from comments table"""
     comments_query = Comments.query.all()
     comments = [comment.serialize_comments() for comment in comments_query]
     return jsonify(comments)
+
+if __name__ == '__main__':
+    APP.run(debug=True)
